@@ -110,15 +110,12 @@ class GameView(arcade.View):
         self.protection_timer = 0
 
     def text(self):
+        """dessine du texte"""
         if self.game_state == GameState.GAME_NOT_STARTED:
             self.start_game_text.draw()
-
-    def show_game_state(self, show):
-        if show is True:
-            print(self.game_state)
-
+            
     def player_draw(self):
-
+        """dessine le joueur"""
         self.player_list.draw()
 
     def on_draw(self):
@@ -141,6 +138,7 @@ class GameView(arcade.View):
         self.fish_list.draw()
 
     def in_game_timer(self):
+        """conteur de temps utilisé pour le score et les i frame"""
         if self.game_state == GameState.GAME_STARTED:
             self.time_text.text = f"Time Played: {self.hour} h {self.minute} min {self.second} s"
             self.timer += 1
@@ -161,6 +159,7 @@ class GameView(arcade.View):
                 self.minute = 0
 
     def player_mouvement(self):
+        """utilisé pour faire bouger le joueur"""
         if (self.key_hold_x == "A" and self.game_state == GameState.GAME_STARTED and
                 self.player.center_x > 0 + PlayerAnimation.PLAYER_SCALE*25):
             self.player.center_x -= self.player_speed
@@ -175,6 +174,7 @@ class GameView(arcade.View):
             self.player.center_y -= self.player_speed
 
     def player_change_anim(self, anim):
+        """utilisé pour changé du joueur"""
         scale = self.player.scale
         self.player_list.pop()
         if anim == "swim":
@@ -210,6 +210,7 @@ class GameView(arcade.View):
         self.player.scale = scale
 
     def fish_spawn(self):
+        """utilisé pour faire apparaitre les poissons"""
         self.fish_spawn_speed += 1
         if self.fish_spawn_speed >= self.fish_spawn_time:
             self.fish_spawn_speed = 0
@@ -223,6 +224,7 @@ class GameView(arcade.View):
                 fish.center_x = 0
 
     def eating(self):
+        """utilisé pour calculé si le poisson touché est plus grand ou plus petit et faire les actions correspondante"""
         fish_hit_list = arcade.check_for_collision_with_list(self.player, self.fish_list)
         for fish in fish_hit_list:
             if PlayerAnimation.PLAYER_SCALE >= fish.npc_scale:
@@ -235,6 +237,7 @@ class GameView(arcade.View):
                 self.protection = True
 
     def gameover(self):
+        """utilisé pour montrer le gameover screen"""
         if self.lives == 0:
             self.game_state = GameState.GAME_OVER
             pausex = pause.PauseView(self)
